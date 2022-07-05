@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'authentication/css/signup.css' %}">
+{% endblock %}
+
+{% block 'title' %}Login{% endblock %}
+
+{% block 'body' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 sidebar">
+            <div class="logo_sidebar">
+                <h2 class="logo">
+                    <img class="img_logo_sidebar" src="{% static 'authentication/img/logo_nutri_lab.png' %}">
+                </h2>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="area_cadastrar">
+                <h2 class="titulo">Seja bem vindo</h2>
+                <p class="sub-titulo">Entre com sua conta</p>
+                <hr>
+                <form action="" method="POST">{% csrf_token %}
+                    <span class="bold">Nome de usuário</span>
+                    <input class="form-control input-form" name="username" type="text" placeholder="Digite seu nome...">
+                    <br>
+                    <span class="bold">Senha</span>
+                    <input class="form-control input-form" name="password" type="password" placeholder="Digite sua senha...">
+                    <br>
+                    <button class="btn-first">Logar</button>
+                </form>
+                {% if messages %}
+                    <br>
+                    {% for message in messages %}
+                        <div class="alert {{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <h3 style="margin: 30px; font-weight: bold">Não tem uma conta ?&nbsp <a class="btn btn-outline-success btn-lg" href="{% url 'signup' %}">Registre-se</a> </h3>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
