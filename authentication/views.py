@@ -30,7 +30,6 @@ def signup(request):
                                             is_active=False)
             user.save()
             token = sha256(f"{username}{email}".encode()).hexdigest()
-            print(token)
             Activation = activation(token=token, user=user)
             Activation.save()
             path_template = os.path.join(settings.BASE_DIR, 'authentication/templates/emails/signup_confirmed_template.html')
@@ -49,14 +48,14 @@ def login(request):
 
     if request.method == "POST":
         username = request.POST.get('username')
-        senha = request.POST.get('password')
-        usuario = auth.authenticate(username=username, password=senha)
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
         
-        if not usuario:      
+        if not user:      
             messages.add_message(request, constants.ERROR, '* Username ou senha inválidos')
             return redirect('/auth/login')
         else:   
-            auth.login(request, usuario)
+            auth.login(request, user)
 
 
         return redirect('/')
