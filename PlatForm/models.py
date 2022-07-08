@@ -17,3 +17,22 @@ class Patients(models.Model):
     class Meta:
         verbose_name = 'Patient'
         verbose_name_plural = 'Patients'
+
+class PatientData(models.Model):
+    patient = models.ForeignKey(Patients, on_delete=models.CASCADE)
+    data = models.DateTimeField()
+    weight = models.IntegerField()
+    height = models.FloatField()
+    percentage_grease = models.IntegerField()
+    percentage_muscle = models.IntegerField()
+    colesterol_hdl = models.IntegerField()
+    colesterol_ldl = models.IntegerField()
+    colesterol_total = models.IntegerField()
+    trigliceridios = models.IntegerField()
+ 
+    def __str__(self):
+        return f"Paciente({self.patient.name}, {self.weight})"
+
+    class Meta:
+        verbose_name = 'PatientData'
+        verbose_name_plural = 'PatientDatas'

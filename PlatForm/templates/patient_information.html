@@ -1,0 +1,193 @@
+{% extends 'base_platform.html' %}
+{% load static %}
+
+{% block 'platform' %}
+    {% if messages %}
+        <br>
+        {% for message in messages %}
+            <div class="alert {{message.tags}}">
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            {% if patient.gender == "M"%}
+                <img src="{% static 'platform/img/perfil2.png' %}">
+            {% else %}
+                <img src="{% static 'platform/img/perfil1.png' %}">
+            {% endif %}
+        </div>
+        <div class="col-md-3 dados descricao">
+            <h4>{{ patient.name}}</h4>
+            <h6>{{ patient.age }} Anos</h6>
+        </div>
+    </div>
+    <hr>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+        Adicionar dados do paciente
+    </button>
+    <br>
+    <br>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Peso</th>
+                <th scope="col">Altura</th>
+                <th scope="col">% gordura</th>
+                <th scope="col">% músculo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in patient_data %}
+                <tr>
+                    <th scope="row">{{data.weight}} Kg</th>
+                    <td>{{data.height}} cm</td>
+                    <td>{{data.percentage_grease}}%</td>
+                    <td>{{data.percentage_muscle}}%</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="width: 60%;">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        fetch("/weight-graph/{{patient.id}}/",{
+            method: 'POST',
+        }).then(function(result){
+            return result.json()
+        }).then(function(data_patient){
+            const data = {
+                labels: data_patient['labels'],
+                datasets: [{
+                label: 'Peso paciente',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: data_patient['weight'],
+                }]
+            };
+            const config = {
+                type: 'line',
+                data: data,
+                options: {}
+            };
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config  
+            );
+        })
+    </script>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+       
+                <div class="modal-body">
+                    <form action="{% url 'patient_information' patient.id %}" method="POST">
+                        {% csrf_token %}
+                        <h4 class="titulo">Dados do paciente</h4>
+                        <div class="form-row">
+
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Peso</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="weight">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">Kg</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Altura</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" step="any" name="height">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">cm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Percentual de gordura</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="grease">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Percentual de músculo</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="muscle">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h4 class="titulo">Dados laboratoriais</h4>
+                        <div class="form-row">
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Colesterol HDL</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="hdl">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">mg/dL</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Colesterol LDL</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="ldl">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">mg/dL</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Colesterol total</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="ctotal">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">mg/dL</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-md'>
+                                <label for="validationServerUsername">Triglicerídios</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="--" min="0" name="triglicerídios">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend3">mg/dL</span>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <input type="submit" value="Cadastrar" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock%}
