@@ -5,7 +5,10 @@ urlpatterns = [
     path('patients/', views.patients, name='patients'),
     path('patient-info-list/', views.patient_info_list, name="patient_info_list"),
     path('patient/<str:id>/', views.patient_information, name="patient_information"),
-    path('weight-graph/<str:id>/', views.weight_graph, name="weight_graph")
-
+    path('weight-graph/<str:id>/', views.weight_graph, name="weight_graph"),
+    path('food-plan-list/', views.food_plan_list, name="food_plan_list"),
+    path('food-plan/<str:id>/', views.food_plan, name="food_plan"),
+    path('meal/<str:id_patient>/', views.meal, name="meal"),
+    path('option/<str:id_patient>/', views.option, name="option"),
 
 ]

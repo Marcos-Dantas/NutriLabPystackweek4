@@ -1,0 +1,178 @@
+{% extends 'base_platform.html' %} 
+{% load static %} 
+
+{% block 'platform' %} 
+
+{% if messages %}
+    <br />
+    {% for message in messages %}
+        <div class="alert {{message.tags}}">
+            {{message}}
+        </div>
+    {% endfor %} 
+{% endif %}
+<br />
+<div class="row">
+    <div class="col-md-3">
+        {% if patient.gender == "M"%}
+        <img src="{% static 'platform/img/perfil2.png' %}" />
+        {% else %}
+        <img src="{% static 'platform/img/perfil1.png' %}" />
+        {% endif %}
+    </div>
+    <div class="col-md-3 dados descricao">
+        <h4>{{patient.name}}</h4>
+        <h6>{{patient.age}} Anos</h6>
+    </div>
+</div>
+<hr />
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+    + Nova refeição
+</button>
+<button type="button" class="btn btn-outline-primary">
+    Exportar refeição
+</button>
+<br />
+<br />
+<div class="fundo-alimentar" >
+    {% if meals %}
+        {% for meal in meals %}
+            <div class="refeicao">
+                <div class="head-refeicao">
+                    <span>{{meal.title}}</span>
+                    <span style="float: right;">{{meal.time}}h</span>
+                </div>
+                
+                <div class="body-refeicao">
+                    {% for option in options %}
+                        {% if option.meal == meal %}
+                            <div class="opcao">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img width="100%" src="{{option.image.url}}">
+                                    </div>
+                                    
+                                    <div class="col-md-10">
+                                        {{option.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    {% else %} 
+            <center>
+                <h3>Não há refeições cadastradas</h3>
+            <center>
+    {% endif %}   
+</div>
+
+
+<!--MODAL-->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="titulo">Adicionar refeição</h4>
+                <button type="button" onclick="show_meal()" class="btn btn-outline-success">
+                    + Nova refeição
+                </button>
+                <button style="margin-left: 10px;" type="button" onclick="show_option()" class="btn btn-outline-success">
+                    + Nova opção
+                </button>
+                <br />
+                <br />
+                <div id="form-refeicao" style="display: block;">
+                    <form action="{% url 'meal' patient.id %}" method="POST">
+                        {% csrf_token %}
+                        <label for="validationServerUsername">Título</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Ex: Café da manhã" name="title" />
+                        </div>
+                        <br />
+                        <label for="validationServerUsername">Horário</label>
+                        <div class="input-group">
+                            <input type="time" class="form-control" placeholder="-" name="time" />
+                        </div>
+                        <br />
+                        <h5 class="titulo">Macronutrientes</h5>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="validationServerUsername">Carboidratos</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" min="0" name="carbohydrates" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="validationServerUsername">Proteínas</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" min="0" name="proteins" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="validationServerUsername">Gorduras</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" placeholder="" min="0" name="grease" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <input type="submit" value="Cadastrar" class="btn btn-success" />
+                    </form>
+                </div>
+                <div id="form-opcao" style="display: none;">
+                    <form action="{% url 'option' patient.id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="validationServerUsername">Selecione a refeição</label>
+                        <div class="input-group">
+                            <select class="form-control" name="meal">
+                                {% for meal in meals %}
+                                    <option value="{{meal.id}}">{{meal.title}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br />
+                        <label for="validationServerUsername">Imagem</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" placeholder="" name="image" />
+                        </div>
+                        <br />
+                        <label for="validationServerUsername">Descrição</label>
+                        <div class="input-group">
+                            <textarea class="form-control" name="description"></textarea>
+                        </div>
+                        <br />
+                        <input type="submit" value="Cadastrar" class="btn btn-success" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function show_meal(){
+        const form_refeicao = document.getElementById('form-refeicao')
+        const form_opcao = document.getElementById('form-opcao')
+        form_refeicao.style.display = "block"
+        form_opcao.style.display = "none"
+        }
+        function show_option(){
+        const form_refeicao = document.getElementById('form-refeicao')
+        const form_opcao = document.getElementById('form-opcao')
+        form_refeicao.style.display = "none"
+        form_opcao.style.display = "block"
+    }
+</script>
+    
+{% endblock%}

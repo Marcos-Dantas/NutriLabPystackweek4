@@ -36,3 +36,23 @@ class PatientData(models.Model):
     class Meta:
         verbose_name = 'PatientData'
         verbose_name_plural = 'PatientDatas'
+
+
+class Meal(models.Model):
+    patient = models.ForeignKey(Patients, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    time = models.TimeField()
+    carbohydrates = models.IntegerField()
+    proteins = models.IntegerField()
+    grease = models.IntegerField()
+    
+    def __str__(self):
+        return self.title
+
+class Option(models.Model):
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="opcao")
+    description = models.TextField()
+    
+    def __str__(self):
+        return self.description 

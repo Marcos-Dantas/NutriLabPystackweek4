@@ -2,6 +2,22 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from .models import Patients
 
+
+def post_meal_data_valid(request, title, time, carbohydrates, proteins, grease):
+    if (len(title.strip()) == 0) or (len(time.strip()) == 0) or (len(carbohydrates.strip()) == 0) or (len(proteins.strip()) == 0) or (len(grease.strip()) == 0):
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
+        return False
+    
+    if (not carbohydrates.isnumeric()) or (not proteins.isnumeric()) or (not grease.isnumeric()):
+        messages.add_message(request, constants.ERROR, 'Digite um valor válido')
+        return False
+
+    if (int(carbohydrates) < 0) or (int(proteins) < 0) or (int(grease) < 0):
+        messages.add_message(request, constants.ERROR, 'Digite um valor válido')
+        return False
+
+    return True
+   
 def is_valid_decimal(value):
     try:
         float(value)

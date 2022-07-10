@@ -12,7 +12,7 @@ from hashlib import sha256
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/patients/')
 
     if request.method == "POST":
         username = request.POST.get('username')
@@ -44,7 +44,7 @@ def signup(request):
             
 def login(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/patients/')
 
     if request.method == "POST":
         username = request.POST.get('username')
@@ -58,7 +58,7 @@ def login(request):
             auth.login(request, user)
 
 
-        return redirect('/')
+        return redirect('/patients/')
 
     return render(request, 'login.html')
 
