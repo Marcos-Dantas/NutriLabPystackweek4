@@ -29,7 +29,7 @@
 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
     + Nova refeição
 </button>
-<button type="button" class="btn btn-outline-primary">
+<button type="button" onclick="location.href='{% url 'generate_meals_pdf' patient.id %}'" class="btn btn-outline-primary">
     Exportar refeição
 </button>
 <br />

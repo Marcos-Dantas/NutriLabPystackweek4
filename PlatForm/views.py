@@ -168,3 +168,34 @@ def option(request, id_patient):
         messages.add_message(request, constants.SUCCESS, 'Opção cadastrada')
         
         return redirect(f'/food-plan/{id_patient}')
+
+
+
+from django_xhtml2pdf.utils import generate_pdf
+
+
+def generate_meals_pdf(request, id_patient):
+    
+    patient = get_object_or_404(Patients, id=id_patient)
+    
+    if not patient.nutri == request.user:
+        messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
+        return redirect('/patient-info-list/')
+ 
+    meals = Meal.objects.filter(patient=patient).order_by('time')    
+    options = Option.objects.all()
+    
+    filename = 'meals'
+
+    context = {
+        'patient': patient,
+        'meals': meals,
+        'options': options
+    }
+
+    resp = HttpResponse(content_type='application/pdf')
+    resp['Content-Disposition'] = f'attachment; filename={filename}.pdf'
+    response = generate_pdf('pdf_files/meals_pdf.html',file_object=resp, context=context)
+
+    return response
+

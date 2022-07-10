@@ -1,0 +1,62 @@
+{% load static %}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        {% include "./pdfstylefonts.css" %}
+    </style>
+    <link rel="stylesheet" href="{% static 'platform/css/pdfstyle.css' %}">
+
+</head>
+<body>
+    <h2> Paciente</h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            {% if patient.gender == "M"%}
+            <img src="{% static 'platform/img/perfil2.png' %}" />
+            {% else %}
+            <img src="{% static 'platform/img/perfil1.png' %}" />
+            {% endif %}
+        </div>
+        <div class="col-md-3 dados descricao">
+            <h4>{{patient.name}}</h4>
+            <h6>{{patient.age}} Anos</h6>
+        </div>
+    </div>
+    <hr />
+    <h2> Refeições</h2>
+    
+    <div class="fundo-alimentar" >
+        {% for meal in meals %}
+            <div class="refeicao">
+                <div class="head-refeicao">
+                    <span>{{meal.title}}</span>
+                    <span style="float: right;">{{meal.time}}h</span>
+                </div>
+                
+                <div class="body-refeicao">
+                    {% for option in options %}
+                        {% if option.meal == meal %}
+                            <div class="opcao">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img width="100%" src="{{option.image.url}}">
+                                    </div>
+                                    
+                                    <div class="col-md-10">
+                                        {{option.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>

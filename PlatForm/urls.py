@@ -10,5 +10,6 @@ urlpatterns = [
     path('food-plan/<str:id>/', views.food_plan, name="food_plan"),
     path('meal/<str:id_patient>/', views.meal, name="meal"),
     path('option/<str:id_patient>/', views.option, name="option"),
+    path('generate-meals-pdf/<str:id_patient>/', views.generate_meals_pdf, name="generate_meals_pdf")
 
 ]
