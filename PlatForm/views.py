@@ -89,13 +89,25 @@ def patient_information(request, id):
 
 @login_required(login_url='/auth/login/')
 @csrf_exempt
-def weight_graph(request, id):
+def data_graph(request, id):
     patient = Patients.objects.get(id=id)
     datas = PatientData.objects.filter(patient=patient).order_by("data")
     weights = [data.weight for data in datas]
+    percentage_greases = [data.percentage_grease for data in datas]
+    percentage_muscles = [data.percentage_muscle for data in datas]
+    colesterol_hdl = [data.colesterol_hdl for data in datas]
+    trigliceridios = [data.trigliceridios for data in datas]
+    
     labels = list(range(len(weights)))
-    data = {'weight': weights,
-            'labels': labels}
+   
+    data = {
+        'weight': weights,
+        'labels': labels,
+        'percentage_greases': percentage_greases,
+        'percentage_muscles': percentage_muscles,
+        'colesterol_hdl': colesterol_hdl,
+        'trigliceridios': trigliceridios,
+    }
     
     return JsonResponse(data)
 

@@ -58,22 +58,48 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        fetch("/weight-graph/{{patient.id}}/",{
+        fetch("/data-graph/{{patient.id}}/",{
             method: 'POST',
         }).then(function(result){
             return result.json()
         }).then(function(data_patient){
             const data = {
                 labels: data_patient['labels'],
-                datasets: [{
-                label: 'Peso paciente',
-                backgroundColor: 'rgb(39,219,143)',
-                borderColor: 'rgb(39,219,143)',
-                data: data_patient['weight'],
-                }]
+                datasets: [
+                    {
+                        label: 'Peso paciente',
+                        backgroundColor: 'rgb(39,219,143)',
+                        borderColor: 'rgb(39,219,143)',
+                        data: data_patient['weight'],
+                    },
+                    {
+                        label: 'Gordura paciente',
+                        backgroundColor: 'rgb(255,255,0)',
+                        borderColor: 'rgb(255,255,0)',
+                        data: data_patient['percentage_greases'],    
+                    },
+                    {
+                        label: 'Musculo paciente',
+                        backgroundColor: 'rgb(0, 0, 255)',
+                        borderColor: 'rgb(0, 0, 255)',
+                        data: data_patient['percentage_muscles'],    
+                    },
+                    {
+                        label: 'Colesterol HLD paciente',
+                        backgroundColor: 'rgb(255, 0, 0)',
+                        borderColor: 'rgb(255, 0, 0)',
+                        data: data_patient['colesterol_hdl'],    
+                    },
+                    {
+                        label: 'Trigliceridios paciente',
+                        backgroundColor: 'rgb(219,112,147)',
+                        borderColor: 'rgb(219,112,147)',
+                        data: data_patient['trigliceridios'],    
+                    }
+                ]
             };
             const config = {
-                type: 'line',
+                type: 'bar',
                 data: data,
                 options: {}
             };
