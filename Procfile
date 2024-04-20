@@ -1,1 +1,1 @@
-web: gunicorn NUTRI_LAB.wsgi
+web: gunicorn nutri_lab_project.wsgi
