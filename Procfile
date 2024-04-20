@@ -1,0 +1,1 @@
+web: gunicorn NUTRI_LAB.wsgi
